@@ -6,14 +6,12 @@ class TripBase(SQLModel):
     budget: int
     trip_style: str
 
-class Trip(TripBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
 
 class TripCreate(TripBase):
     pass
 
 class TripResponse(TripBase):
-    message: str
+    message: str | None = None
 
 class TripUpdate(SQLModel):
     destination: str | None = None
