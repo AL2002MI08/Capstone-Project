@@ -12,9 +12,6 @@ router = APIRouter(tags=["Users"])
 def get_users(session: Session = Depends(get_session)):
     return user_service.get_users(session)
 
-@router.post("", response_model=UserResponse)
-def create_user(user: UserCreate, session: Session = Depends(get_session), current_user: str = Depends(get_current_user)):
-    return user_service.create_user(session, user.username, user.password)
 
 @router.get("/me")
 def read_user(user: str = Depends(get_current_user)):
