@@ -2,6 +2,13 @@ from pydantic import BaseModel
 from typing import List
 
 
-class Itinerary(BaseModel):
+class ItineraryBase(BaseModel):
     trip_id: int
-    days: List
+    days: List[dict]
+
+class ItineraryCreate(ItineraryBase):
+    pass
+
+class ItineraryResponse(ItineraryBase):
+    message: str
+
