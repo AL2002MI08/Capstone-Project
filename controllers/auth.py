@@ -1,3 +1,6 @@
+from schemas.user import UserResponse
+from schemas.user import UserCreate
+from services import user_service
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
@@ -6,6 +9,12 @@ from services.auth import login_service as login_service
 from core.auth import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.post("/register", response_model=UserResponse)
+def register(user: UserCreate, session: Session = Depends(get_session)):
+    return user_service.create_user(session, user.username, user.password)
+
 
 @router.post("/login")
 def login(session: Session = Depends(get_session), form_data: OAuth2PasswordRequestForm = Depends()):
