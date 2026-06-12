@@ -14,8 +14,8 @@ from services.trip_service import confirm_booking
 router = APIRouter(prefix= "/trips", tags=["Trips"])
 
 @router.get("", response_model=List[TripResponse])
-def get_all_trips(username: str = Depends(get_current_user), session: Session = Depends(get_session)):
-    user = user_service.get_user(session, username)
+def get_all_trips(email: str = Depends(get_current_user), session: Session = Depends(get_session)):
+    user = user_service.get_user(session, email)
     return trip_service.get_user_trips(session, user.id)
 
 @router.post("")
