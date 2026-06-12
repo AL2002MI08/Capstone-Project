@@ -1,3 +1,4 @@
+from schemas.itinerary import DayEntry
 from sqlmodel import select
 from schemas.itinerary import ItineraryResponse
 from models.trip import Trip
@@ -16,7 +17,7 @@ def create_itinerary(session: Session, itinerary: ItineraryCreate):
     
     db_itinerary = Itinerary(
         trip_id=itinerary.trip_id,
-        days=itinerary.days,
+        days=[day.model_dump() for day in itinerary.days],
     )
     session.add(db_itinerary)
     session.commit()
@@ -24,7 +25,7 @@ def create_itinerary(session: Session, itinerary: ItineraryCreate):
     
     return ItineraryResponse(
         trip_id=db_itinerary.trip_id,
-        days=db_itinerary.days,
+        days=[DayEntry(**day) for day in db_itinerary.days],
         message="Itinerary created successfully!"
     )
 

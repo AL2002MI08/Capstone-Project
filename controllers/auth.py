@@ -13,7 +13,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, session: Session = Depends(get_session)):
-    return user_service.create_user(session, user.username, user.password)
+    return user_service.create_user(session, user.email, user.password)
 
 
 @router.post("/login")
@@ -21,7 +21,7 @@ def login(session: Session = Depends(get_session), form_data: OAuth2PasswordRequ
     user = login_service(session, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    token = create_access_token({"sub": user.username})
+    token = create_access_token({"sub": user.email})
     return {
         "access_token": token,
         "token_type": "bearer"
