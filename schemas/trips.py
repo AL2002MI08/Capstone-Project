@@ -11,6 +11,7 @@ class TripCreate(TripBase):
     pass
 
 class TripResponse(TripBase):
+    id: int
     message: str | None = None
 
 class TripUpdate(SQLModel):

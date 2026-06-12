@@ -1,3 +1,4 @@
+from annotated_types import T
 from schemas.trips import TripCreate, TripResponse, TripUpdate
 from fastapi import HTTPException
 from models.trip import Trip
@@ -11,7 +12,11 @@ def get_user_trips(session: Session, user_id: int):
     return session.exec(select(Trip).where(Trip.user_id == user_id)).all()
 
 def get_trip(session: Session, trip_id: int):
-    return session.get(Trip, trip_id)
+    trip = session.get(Trip, trip_id)
+
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found.")
+    return trip
 
 def create_trip(user_id: int, trip: TripCreate, session: Session = Depends(get_session)):
     db_trip = Trip.model_validate(trip, update={"user_id": user_id})
