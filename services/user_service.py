@@ -4,9 +4,13 @@ from fastapi import HTTPException
 from core.auth import hash_password
 
 
-def create_user(session: Session, username, password):
+def create_user(session: Session, email, password):
+    user_exists = session.exec(select(User).where(User.email == email)).first()
+
+    if user_exists:
+        raise HTTPException(status_code=400, detail="User already have an account")
     user = User(
-        username=username,
+        email=email,
         hashed_password=hash_password(password)
     )
     session.add(user)
@@ -18,12 +22,13 @@ def get_users(session: Session):
     users = session.exec(select(User)).all()
     return users
 
-def get_user(session: Session, username: str):
-    user = session.exec(select(User).where(User.username == username)).first()
+def get_user(session: Session, email: str):
+    user = session.exec(select(User).where(User.email == email)).first()
     return user
 
-def update_user(session: Session, username: str, new_password: str):
-    user = session.exec(select(User).where(User.username == username)).first()
+def update_user(session: Session, email: str, new_password: str):
+    user = session.exec(select(User).where(User.email == email)).first()
+    
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if len(new_password) < 8:
