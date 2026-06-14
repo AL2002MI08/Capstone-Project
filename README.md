@@ -9,6 +9,7 @@ A FastAPI-based travel planning application that allows users to create and mana
 - **Authentication**: JWT (JSON Web Tokens)
 - **Password Hashing**: Argon2
 - **Migrations**: Alembic
+- **AI Integration**: Anthropic Claude API for dynamic itinerary generation
 
 ## Project Structure
 
@@ -67,7 +68,7 @@ fastapi-exercise/
 
 **Attributes**:
 - `id` (int): Primary key
-- `username` (str): Unique username (1-50 characters)
+- `email` (str): Unique email address for authentication
 - `hashed_password` (str): Securely hashed password
 
 **Relationships**:
@@ -134,7 +135,7 @@ Authenticates a user and returns a JWT token.
 
 **Request Body** (Form Data):
 ```
-username: string
+email: string
 password: string
 ```
 
@@ -266,28 +267,17 @@ Deletes a trip and its associated itineraries.
 
 ### Itinerary
 
-#### Create Itinerary
-**POST** `/itinerary`
+#### Generate AI Itinerary
+**POST** `/itinerary/{trip_id}`
 
-Creates a detailed itinerary for a trip with day-by-day plans.
+Dynamically generates a detailed day-by-day itinerary using llm (anthropic) based on the trip's destination, duration, budget, and travel style. The generated itinerary is automatically saved to the database.
 
 **Authentication**: Required (Bearer Token)
 
-**Request Body**:
-```json
-{
-  "trip_id": "integer",
-  "days": [
-    {
-      "day": 1,
-      "activities": ["activity1", "activity2"],
-      "notes": "string"
-    }
-  ]
-}
-```
+**Path Parameters**:
+- `trip_id` (int): ID of the trip to generate an itinerary for
 
-**Response**: Created `Itinerary` object
+**Response**: Created `ItineraryResponse` object with AI-generated day-by-day plans
 
 ---
 

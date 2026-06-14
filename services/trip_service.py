@@ -6,8 +6,6 @@ from sqlmodel import Session, select
 from fastapi import Depends
 from core.db import get_session
 import time
-
-
 def get_user_trips(session: Session, user_id: int):
     return session.exec(select(Trip).where(Trip.user_id == user_id)).all()
 
@@ -36,10 +34,9 @@ def update_trip(trip_id: int, session: Session, trip: TripUpdate):
     db_trip = session.get(Trip, trip_id)
     if not db_trip:
         raise HTTPException(status_code=404, detail="Trip not found")
-    db_trip.destination = trip.destination
-    db_trip.days = trip.days
-    db_trip.budget = trip.budget
-    db_trip.trip_style = trip.trip_style
+    trip_data = trip.model_dump(exclude_unset=True)
+    for key, value in trip_data.items():
+        setattr(db_trip, key, value)
     session.add(db_trip)
     session.commit()
     session.refresh(db_trip)
