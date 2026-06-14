@@ -1,10 +1,9 @@
-import services.itinerary_service
+from core.db import get_session
+from fastapi import Depends
+from services import itinerary_service
+from fastapi import APIRouter
 from core.deps import get_current_user
 from sqlmodel import Session
-from fastapi import APIRouter, Depends
-from core.db import get_session
-from services import itinerary_service
-
 router = APIRouter(prefix="/itinerary", tags=["Itinerary"])
 
 @router.post("/{trip_id}")

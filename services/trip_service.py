@@ -6,8 +6,6 @@ from sqlmodel import Session, select
 from fastapi import Depends
 from core.db import get_session
 import time
-
-
 def get_user_trips(session: Session, user_id: int):
     return session.exec(select(Trip).where(Trip.user_id == user_id)).all()
 

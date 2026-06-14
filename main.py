@@ -7,3 +7,4 @@ app.include_router(user_routes.router, prefix="/users")
 app.include_router(trip.router)
 app.include_router(itinerary.router)
 
+
